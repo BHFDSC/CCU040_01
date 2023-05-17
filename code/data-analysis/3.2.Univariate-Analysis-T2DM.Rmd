@@ -1,0 +1,81 @@
+---
+title: "Replication project - 3 - Univariate analysis - T2DM"
+output:
+  html_document: default
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding, output_dir = "output") })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(furniture)
+library(knitr)
+library(here)
+
+# Recommended best practice - clears all values from the environment
+rm(list = ls())
+```
+
+```{r load data, echo=FALSE}
+t2dm_df <- readRDS(file=here("data", "processed-t2d_df_eth.rds"))
+
+```
+
+## Logistic regression models
+### Factors associated with 28 day admission in diabetic patients
+Here we use logistic regression to investigate possible factors associated with 28day hospital admission following COVID diagnosis in T2D patients Note, this does not include the controls (only those with diabetes).
+Univariate logistic regression was performed including each candidate predictor in the model as the sole predictor.
+Below is a table of the results presented as odds ratios and 95% confidence interval for each of the univariate models.
+
+
+```{r , echo=FALSE, warning=FALSE, message = FALSE}
+
+t2dm_df1 <- t2dm_df %>% dplyr::filter(diab==2)
+
+fit <- glm(admission ~ Sex, data = t2dm_df1, family = "binomial")
+diab2_coefs_int <- cbind(OR = exp(coef(fit)), exp(confint(fit)))[1,]
+diab2_coefs_var <- cbind(OR = exp(coef(fit)), exp(confint(fit)))[2,]
+
+#TODO don't hard code these
+a <- names(t2dm_df1)[c(8,17:21,24,29:36,44)]
+
+for(i in seq_along(a)){
+  print(a[i])
+
+  fit <- glm(admission ~ get(a[i]), data = t2dm_df1, family = "binomial")
+  diab2_coefs_int <- rbind(diab2_coefs_int, cbind(OR = exp(coef(fit)), exp(confint(fit)))[1,] )
+  diab2_coefs_var <- rbind(diab2_coefs_var, cbind(OR = exp(coef(fit)), exp(confint(fit)))[2,] )
+}
+b <- names(t2dm_df1[c(9,28,46)])
+
+# townsend
+fit <- glm(admission ~ as.factor(TownsendQuintileHigherIsMoreDeprived), data = t2dm_df1, family = "binomial")
+diab2_coefs_int <- rbind(diab2_coefs_int, cbind(OR = exp(coef(fit)), exp(confint(fit)))[1,] )
+diab2_coefs_var <- rbind(diab2_coefs_var, cbind(OR = exp(coef(fit)), exp(confint(fit)))[-1,] )
+
+# smoking
+fit <- glm(admission ~ as.factor(CurrentSmokingStatus), data = t2dm_df1, family = "binomial")
+diab2_coefs_int <- rbind(diab2_coefs_int, cbind(OR = exp(coef(fit)), exp(confint(fit)))[1,] )
+diab2_coefs_var <- rbind(diab2_coefs_var, cbind(OR = exp(coef(fit)), exp(confint(fit)))[-1,] )
+
+# ethnicity
+fit <- glm(admission ~ ethnicity, data = t2dm_df1, family = "binomial")
+diab2_coefs_int <- rbind(diab2_coefs_int, cbind(OR = exp(coef(fit)), exp(confint(fit)))[1,] )
+diab2_coefs_var <- rbind(diab2_coefs_var, cbind(OR = exp(coef(fit)), exp(confint(fit)))[-1,] )
+
+b1 <- c(levels(as.factor(t2dm_df1$TownsendQuintileHigherIsMoreDeprived))[-1], levels(as.factor(t2dm_df1$CurrentSmokingStatus))[-1], levels(t2dm_df1$ethnicity)[-1] )
+
+diab2_coefs_int <- data.frame(var= c("Sex", a, b), diab2_coefs_int)
+diab2_coefs_var <- data.frame(var= c("Sex", a, b1), diab2_coefs_var)
+
+
+```
+
+
+```{r , echo=FALSE, warning=FALSE, message = FALSE}
+
+kable(diab2_coefs_var, digits = 3, row.names = FALSE, align = "lccc", caption = "Odds ratios from logistic regression for 28day hospital admission following covid diagnosis in T2D patients including each variable in a univariable analysis" )
+
+```
+

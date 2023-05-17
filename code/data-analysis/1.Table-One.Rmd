@@ -1,0 +1,99 @@
+---
+title: "Replication project - 1 - Table One"
+output:
+  html_document: default
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding, output_dir = "output") })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(furniture)
+library(knitr)
+library(here)
+
+# Recommended best practice - clears all values from the environment
+rm(list = ls())
+```
+
+```{r load data, echo=FALSE}
+t1dm_df <- readRDS(file=here(getwd(),"data", "processed-t1d_df_eth.rds"))
+t2dm_df <- readRDS(file=here(getwd(),"data", "processed-t2d_df_eth.rds"))
+t1dm_sgss_df <- readRDS(file=here(getwd(),"data", "processed-t1d_df_sgss_eth.rds"))
+t2dm_sgss_df <- readRDS(file=here(getwd(),"data", "processed-t2d_df_sgss_eth.rds"))
+
+```
+
+## Baseline tables
+
+Here are the baseline tables for the two cohorts (split by diabetes diagnosis -yes/no). The first two are using COVID positive tests from GP data (like the GM study).
+
+```{r , echo=FALSE, warning=TRUE}
+
+t1dm_df %>%
+  table1(age, TownsendScoreHigherIsMoreDeprived, as.factor(TownsendQuintileHigherIsMoreDeprived),
+         LatestBMIValue, LatestLDLValue, LatestHDLValue, LatestEGFRValue,
+         LatestHBA1CValue, 
+         LatestCHOLESTEROLValue, CurrentSmokingStatus,
+         PatientHasASTHMA, PatientHasCOPD, PatientHasSMI,PatientHasHYPERTENSION,
+         IsOnACEI, IsOnAspirin, IsOnClopidogrel, IsOnMetformin,
+         DeathWithin28DaysCovidPositiveTest, LengthOfStay, as.numeric(daystodeath),
+         as.numeric(timetoadmission), as.factor(admission), as.factor(ethnicity),
+         splitby = "diab", test = FALSE, na.rm = FALSE, type = "condensed") %>% 
+  kable(format = "pipe", col.names = c("Variable", "Controls", "T1D"), align = "ccc", caption = "Baseline data for type 1 diabetic patients and matched cohort")
+
+```
+\newpage
+```{r , echo=FALSE, warning=TRUE}
+
+
+t2dm_df %>%
+  table1(age, TownsendScoreHigherIsMoreDeprived, as.factor(TownsendQuintileHigherIsMoreDeprived),
+         LatestBMIValue, LatestLDLValue, LatestHDLValue, LatestEGFRValue,
+         LatestHBA1CValue,  
+         LatestCHOLESTEROLValue, CurrentSmokingStatus,
+         PatientHasASTHMA, PatientHasCOPD, PatientHasSMI, PatientHasHYPERTENSION,
+         IsOnACEI, IsOnAspirin, IsOnClopidogrel, IsOnMetformin,
+         DeathWithin28DaysCovidPositiveTest, LengthOfStay, as.numeric(daystodeath),
+         as.numeric(timetoadmission), as.factor(admission), as.factor(ethnicity),
+         splitby = "diab",na.rm = FALSE, test = FALSE, type = "condensed") %>% 
+  kable(format = "simple", col.names = c("Variable", "Controls", "T2D"), align = "ccc", caption = "Baseline data for type 2 diabetic patients and matched cohort")
+```
+\newpage
+
+These next two tables are when using the SGSS data for COVID positive tests.
+
+```{r , echo=FALSE, warning=TRUE}
+
+t1dm_sgss_df %>%
+  table1(age, TownsendScoreHigherIsMoreDeprived, as.factor(TownsendQuintileHigherIsMoreDeprived),
+         LatestBMIValue, LatestLDLValue, LatestHDLValue, LatestEGFRValue,
+         LatestHBA1CValue, 
+         LatestCHOLESTEROLValue, CurrentSmokingStatus,
+         PatientHasASTHMA, PatientHasCOPD, PatientHasSMI,PatientHasHYPERTENSION,
+         IsOnACEI, IsOnAspirin, IsOnClopidogrel, IsOnMetformin,
+         DeathWithin28DaysCovidPositiveTest, LengthOfStay, as.numeric(daystodeath),
+         as.numeric(timetoadmission), as.factor(admission), as.factor(ethnicity),
+         splitby = ~diab, na.rm = FALSE, type = "condensed") %>% 
+  kable(format = "pipe", col.names = c("Variable", "Controls", "T1D"), align = "ccc", caption = "Baseline data for type 1 diabetic patients and matched cohort")
+
+```
+\newpage
+```{r , echo=FALSE, warning=TRUE}
+
+
+t2dm_sgss_df %>%
+  table1(age, TownsendScoreHigherIsMoreDeprived, as.factor(TownsendQuintileHigherIsMoreDeprived),
+         LatestBMIValue, LatestLDLValue, LatestHDLValue, LatestEGFRValue,
+         LatestHBA1CValue,  
+         LatestCHOLESTEROLValue, CurrentSmokingStatus,
+         PatientHasASTHMA, PatientHasCOPD, PatientHasSMI, PatientHasHYPERTENSION,
+         IsOnACEI, IsOnAspirin, IsOnClopidogrel, IsOnMetformin,
+         DeathWithin28DaysCovidPositiveTest, LengthOfStay, as.numeric(daystodeath),
+         as.numeric(timetoadmission), as.factor(admission), as.factor(ethnicity),
+         splitby = "diab",na.rm = FALSE, test = FALSE, type = "condensed") %>% 
+  kable(format = "simple", col.names = c("Variable", "Controls", "T2D"), align = "ccc", caption = "Baseline data for type 2 diabetic patients and matched cohort")
+```
+

@@ -1,0 +1,81 @@
+---
+title: "Replication project - 2 - KM plots"
+output:
+  html_document: default
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding, output_dir = "output") })
+---
+
+***NB for some reason this fails with an error. Ignoring for now as comparing KM plots is probably the least interesting, and hardest to do statistically.***
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(furniture)
+library(knitr)
+library(here)
+
+# Recommended best practice - clears all values from the environment
+#rm(list = ls())
+```
+
+```{r load data, echo=FALSE}
+t1dm_df <- readRDS(file=here("data", "processed-t1d_df_eth.rds"))
+summary(t1dm_df)
+#t2dm_df <- readRDS(file=here("data", "processed-t2d_df_eth.rds"))
+#t1dm_sgss_df <- readRDS(file=here("data", "processed-t1d_df_sgss_eth.rds"))
+#t2dm_sgss_df <- readRDS(file=here("data", "processed-t2d_df_sgss_eth.rds"))
+
+```
+
+# Survival plots
+
+```{r , echo=FALSE, warning=FALSE}
+t1dm_df$adtime <- ifelse(is.na(t1dm_df$timetoadmission)==TRUE, 365, as.numeric(t1dm_df$timetoadmission))
+#t2dm_df$adtime <- ifelse(is.na(t2dm_df$timetoadmission)==TRUE, 365, as.numeric(t2dm_df$timetoadmission))
+
+t1dm_df$admiss <- ifelse(is.na(t1dm_df$admissiondate) ==TRUE, 0,1)
+#t2dm_df$admiss <- ifelse(is.na(t2dm_df$admissiondate) ==TRUE, 0,1)
+
+```
+
+```{r , echo=FALSE, warning=FALSE, message=FALSE}
+library(survival)
+library(survminer)
+
+#surv1 <- Surv(t1dm_df$adtime, t1dm_df$admiss)
+
+t1dm_df$admissionmonth <- as.numeric(format(t1dm_df$admissiondate, "%m"))
+t1dm_df$admissiony <- as.numeric(format(t1dm_df$admissiondate, "%y"))
+t1dm_df$COVIDPositiveTesty <- as.numeric(format(t1dm_df$COVIDPositiveTestDate, "%y"))
+t1dm_df$COVIDPositiveTestmonth <- as.numeric(format(t1dm_df$COVIDPositiveTestDate, "%m"))
+t1dm_df$admissionmonth <- ifelse(t1dm_df$admissiony==21,12+t1dm_df$admissionmonth, t1dm_df$admissionmonth)
+t1dm_df$COVIDPositiveTestmonth <- ifelse(t1dm_df$COVIDPositiveTesty==21,12+t1dm_df$COVIDPositiveTestmonth, t1dm_df$COVIDPositiveTestmonth)
+t1dm_df$timetoadmission_m <- t1dm_df$admissionmonth - t1dm_df$COVIDPositiveTestmonth
+t1dm_df$timetoadmission_m <- ifelse(is.na(t1dm_df$timetoadmission_m)==TRUE, 19,t1dm_df$timetoadmission_m)
+
+#t2dm_df$admissionmonth <- as.numeric(format(t2dm_df$admissiondate, "%m"))
+#t2dm_df$admissiony <- as.numeric(format(t2dm_df$admissiondate, "%y"))
+#t2dm_df$COVIDPositiveTesty <- as.numeric(format(t2dm_df$COVIDPositiveTestDate, "%y"))
+#t2dm_df$COVIDPositiveTestmonth <- as.numeric(format(t2dm_df$COVIDPositiveTestDate, "%m"))
+#t2dm_df$admissionmonth <- ifelse(t2dm_df$admissiony==21,12+t2dm_df$admissionmonth, t2dm_df$admissionmonth)
+#t2dm_df$COVIDPositiveTestmonth <- ifelse(t2dm_df$COVIDPositiveTesty==21,12+t2dm_df$COVIDPositiveTestmonth, #t2dm_df$COVIDPositiveTestmonth)
+#t2dm_df$timetoadmission_m <- t2dm_df$admissionmonth - t2dm_df$COVIDPositiveTestmonth
+#t2dm_df$timetoadmission_m <- ifelse(is.na(t2dm_df$timetoadmission_m)==TRUE, 19,t2dm_df$timetoadmission_m)
+
+
+fit1 <- survfit(Surv(t1dm_df$timetoadmission_m, t1dm_df$admiss) ~ diab, data = t1dm_df)
+res <- ggsurvplot(fit1, data = t1dm_df, risk.table = TRUE, xlim= c(0,15), ylim = c(0.5,1),
+           risk.table.height = 0.3, ggtheme = theme_bw(), fontsize=2.2)
+res$plot <- res$plot + labs(title ="Kaplan-Meier for T1D cohort split by diabetes diagnosis") + xlab("Time (months)") +
+  theme(plot.title = element_text(hjust=0.5, size=11))
+print(res)
+
+fit2 <- survfit(Surv(t2dm_df$timetoadmission_m, t2dm_df$admiss) ~ diab, data = t2dm_df)
+res <- ggsurvplot(fit2, data = t2dm_df, risk.table = TRUE, xlim= c(0,15), ylim = c(0.5,1),
+           risk.table.height = 0.3, ggtheme = theme_bw(), fontsize=2.2)
+res$plot <- res$plot + labs(title ="Kaplan-Meier for T2D cohort split by diabetes diagnosis") + xlab("Time (months)") +
+  theme(plot.title = element_text(hjust=0.5, size=11))
+print(res)
+
+```

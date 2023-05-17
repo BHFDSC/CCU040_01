@@ -1,0 +1,80 @@
+---
+title: "Replication project - 4 - Logistic Regression - T2DM vs controls"
+output:
+  html_document: default
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding, output_dir = "output") })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(furniture)
+library(knitr)
+library(here)
+
+# Recommended best practice - clears all values from the environment
+rm(list = ls())
+```
+
+```{r load data, echo=FALSE}
+t2dm_df <- readRDS(file=here("data", "processed-t2d_df_eth.rds"))
+t2dm_df2 <- t2dm_df %>% dplyr::filter(diab==2)
+```
+
+## Logistic regression models
+### Factors associated with 28 day admission in T2DM patients compared to non-diabetes patients
+Here we use logistic regression to investigate possible factors associated with 28day hospital admission following COVID diagnosis in diabetes patients compared to non-diabetes patients. Note, this includes the controls.
+Initially a logistic regression was performed in the T2DM cohort (including controls). The model included age, sex and diabetes. This provided an odds ratio for diabetes vs non-diabetes patients and was then used as the base model to compare other models.
+
+Following this, we added BMI into the model and compared the odds ratio for diabetes to the base model. This was repeated for all of the variables of interest.
+
+```{r , echo=FALSE, warning=FALSE, message = FALSE}
+# odds ratio for T2D vs controls 
+fit <- glm(admission ~ age + Sex + as.factor(diab), data = t2dm_df, family = "binomial")
+
+diab2_coef_diab <- cbind(OR = exp(coef(fit))[4], exp(confint(fit)))[4,]
+
+a <- names(t2dm_df2)[c(8,17:21,24,29:36)]
+b <- names(t2dm_df2[c(9,28,46)])
+for(i in seq_along(a)){
+
+fit <- glm(admission ~ age + Sex + as.factor(diab) + get(a[i]), data = t2dm_df, family = "binomial")
+diab2_coef_diab <- rbind(diab2_coef_diab, cbind(OR = exp(coef(fit))[4], exp(confint(fit)))[4,] )
+
+}
+fit <- glm(admission ~ age + Sex + as.factor(diab) + as.factor(TownsendQuintileHigherIsMoreDeprived), data = t2dm_df, family = "binomial")
+diab2_coef_diab <- rbind(diab2_coef_diab, cbind(OR = exp(coef(fit))[4], exp(confint(fit)))[4,] )
+
+fit <- glm(admission ~ age + Sex + as.factor(diab) + as.factor(CurrentSmokingStatus), data = t2dm_df, family = "binomial")
+diab2_coef_diab <- rbind(diab2_coef_diab, cbind(OR = exp(coef(fit))[4], exp(confint(fit)))[4,] )
+
+fit <- glm(admission ~ age + Sex + as.factor(diab) + as.factor(ethnicity), data = t2dm_df, family = "binomial")
+diab2_coef_diab <- rbind(diab2_coef_diab, cbind(OR = exp(coef(fit))[4], exp(confint(fit)))[4,] )
+
+diab2_coef_diab <- data.frame(var = c("base", a, b), diab2_coef_diab)
+
+```
+
+```{r , echo=FALSE, warning=FALSE, message = FALSE}
+kable(diab2_coef_diab, digits = 3, row.names = FALSE, align = "lccc", caption = "Diabetes coefficient from each logistic model in T2Ds matched cohort" )
+
+```
+
+```{r , echo=FALSE, warning=FALSE, message = FALSE}
+library(ggplot2)
+
+diab2_coef_diab$index <- 1:nrow(diab2_coef_diab)
+
+g <- ggplot(data=diab2_coef_diab, aes(y=index, x=OR, xmin = X2.5.. , xmax = X97.5..)) +
+  geom_point() +
+  geom_errorbarh(height=.1) +
+  scale_y_continuous(breaks=1:nrow(diab2_coef_diab), labels = diab2_coef_diab$var) +
+  coord_cartesian(xlim= c(0.6,2.5)) +
+  geom_vline(xintercept = 1, color = 'black', linetype='dashed', alpha=.5) +
+  labs(title = "T2D coefficient from each model", x='Odds ratio', y = 'Variable') +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust=0.5, size=11))
+
+print(g)
+```

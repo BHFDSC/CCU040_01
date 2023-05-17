@@ -1,0 +1,44 @@
+---
+title: "Replication project - 5 - Final Logistic Regression - T2DM vs controls - SGSS"
+output:
+  html_document: default
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding, output_dir = "output") })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(furniture)
+library(knitr)
+library(here)
+
+# Recommended best practice - clears all values from the environment
+rm(list = ls())
+```
+
+```{r load data, echo=FALSE}
+t2dm_df <- readRDS(file=here("data", "processed-t2d_df_sgss_eth.rds"))
+t2dm_df2 <- t2dm_df %>% dplyr::filter(diab==2)
+```
+
+## Logistic regression models
+
+Finally, we ran a logistic model for 28 day admission following covid diagnosis adjusting for age, sex, diabetes, hba1c, BMI, Age, ethnicity and townsend. 
+
+***NB this is using the SGSS data to determine COVID tests***
+
+
+```{r , echo=FALSE, warning=FALSE, message = FALSE}
+
+
+fit <- glm(admission ~ age + Sex + as.factor(diab) + LatestBMIValue  + LatestBMIValue +
+             ethnicity + TownsendScoreHigherIsMoreDeprived + as.factor(PatientHasHYPERTENSION), data = t2dm_df, family = "binomial")
+
+diab2_coef_full <- data.frame(Var = c("Intercept", "Age", "Sex-M", "Diabetes", "BMI", "ethnicity-African", 
+                                    "Ethnicity-Asian", "Ethnicity-Mixed", "Ethnicity-Other", "Townsend", "Hypertension"), 
+                         cbind(OR = exp(coef(fit)), exp(confint(fit)) ))
+
+
+kable(diab2_coef_full, digits = 3, row.names = FALSE, align = "lccc", caption = "Diabetes coefficient from full adjusted logistic model in T2Ds matched cohort - using SGSS for COVID tests" )
+```
