@@ -4,7 +4,7 @@ Analysis and curation code related to the analysis conducted for this project.
 
 ## Data curation
 
-The following files are the data curation pipeline and can be found in Databricks. The actual SNOMED codes are not included, but there are references to the code sets in the phenotypes directory e.g. `/*--diabetes--*/` would be replaced with the list of SNOMED codes for diabetes. The culmination of files `CCU040_01--01`, `CCU040_01--02` and `CCU040_01--03` is a table `dars_nic_391419_j3w9t_collab.CCU040_01_Output_Cohort_Table` which contains all the data necessary for the analysis on the cohort defined by COVID tests in the GP record. The culmination of files `CCU040_01--04`, `CCU040_01--05` and `CCU040_01--06` is a table `dars_nic_391419_j3w9t_collab.CCU040_01_SGSS_Output_Cohort_Table` which contains all the data necessary for the analysis on the cohort defined by COVID tests in the SGSS dataset.
+The following files are the data curation pipeline and can be found in Databricks.
 
 | File                                                                                                                                       | Description                                                                 |
 | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
@@ -17,6 +17,30 @@ The following files are the data curation pipeline and can be found in Databrick
 | [CCU040_01-lsoa.template.sql](./data-curation/CCU040_01-lsoa.template.sql)                                                                 | Obtain the LSOA for each patient                                            |
 | [CCU040_01-smoking-status.template.sql](./data-curation/CCU040_01-smoking-status.template.sql)                                             | Obtain the smoking status for each patient                                  |
 | [CCU040_01-townsend.template.sql](./data-curation/CCU040_01-townsend.template.sql)                                                         | Obtain the Townsend index for each patient                                  |
+
+The actual SNOMED codes are not included, but there are references to the code sets in the phenotypes directory e.g. `/*--diabetes--*/` would be replaced with the list of SNOMED codes for diabetes. The culmination of the 3 files:
+
+- `CCU040_01--01`
+- `CCU040_01--02`
+- `CCU040_01--03`
+
+is a table:
+
+- `dars_nic_391419_j3w9t_collab.CCU040_01_Output_Cohort_Table`
+
+which contains all the data necessary for the analysis on the cohort defined by COVID tests in the GP record.
+
+The culmination of the 3 files:
+
+- `CCU040_01--04`
+- `CCU040_01--05`
+- `CCU040_01--06`
+
+is a table:
+
+- `dars_nic_391419_j3w9t_collab.CCU040_01_SGSS_Output_Cohort_Table`
+
+which contains all the data necessary for the analysis on the cohort defined by COVID tests in the SGSS dataset.
 
 ## Analysis
 
