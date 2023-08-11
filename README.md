@@ -1,4 +1,4 @@
-# The factors associated with increased risk of hospitalisation and death in people with diabetes following SARS-CoV-2 infection: A national replication study
+# Sars-Cov-2 Infection in People with Type 1 Diabetes and Hospital Admission: An Analysis of Risk Factors for England
 
 ## Project description
 
@@ -13,8 +13,8 @@ We also plan to extend the analysis to take advantage of any extra data that is 
 
 ## Contents
 
-* [View the analysis code used in NHS Digital's TRE for England](https://github.com/BHFDSC/CCU040_01/tree/main/code)
-* [View the phenotyping algorithms and codelists used in NHS Digital's TRE for England](https://github.com/BHFDSC/CCU040_01/tree/main/phenotypes)
+* [View the analysis code used in NHS England's SDE for England](https://github.com/BHFDSC/CCU040_01/tree/main/code)
+* [View the phenotyping algorithms and codelists used in NHS England's SDE for England](https://github.com/BHFDSC/CCU040_01/tree/main/phenotypes)
 
 ## Project approval
 
