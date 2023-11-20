@@ -1,5 +1,7 @@
 # Sars-Cov-2 Infection in People with Type 1 Diabetes and Hospital Admission: An Analysis of Risk Factors for England
 
+**Adrian H. Heald, David A. Jenkins, Richard Williams, Rajshekhar N. Mudaliar, Amber Khan, Akheel Syed, Naveed Sattar, Kamlesh Khunti, Asma Naseem, Kelly A. Bowden-Davies, J. Martin Gibson & William Ollier, on behalf of the CVD-COVID-UK/COVID-IMPACT Consortium**
+
 ## Project description
 
 People with type 1 or type 2 diabetes are more likely to be admitted to hospital, and more likely to die, after getting infected with COVID-19. We have recently used data from Greater Manchester (GM) to discover why this might be. We found several things that increased the risk of poor outcomes, such as age, being male, being socially deprived, ethnicity, certain medications and certain health conditions.
@@ -9,7 +11,7 @@ We will now try to repeat these results using the national COVID-IMPACT data. St
 We also plan to extend the analysis to take advantage of any extra data that is available nationally, but that was not available in GM.
 
 ## How to cite this work
-> Citation details to follow
+> Heald, A.H., Jenkins, D.A., Williams, R. et al. Sars-Cov-2 Infection in People with Type 1 Diabetes and Hospital Admission: An Analysis of Risk Factors for England. Diabetes Ther (2023). https://doi.org/10.1007/s13300-023-01456-8
 
 ## Contents
 
