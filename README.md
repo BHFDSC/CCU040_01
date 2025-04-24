@@ -11,7 +11,15 @@ We will now try to repeat these results using the national COVID-IMPACT data. St
 We also plan to extend the analysis to take advantage of any extra data that is available nationally, but that was not available in GM.
 
 ## How to cite this work
-> Heald, A.H., Jenkins, D.A., Williams, R. et al. Sars-Cov-2 Infection in People with Type 1 Diabetes and Hospital Admission: An Analysis of Risk Factors for England. Diabetes Ther (2023). https://doi.org/10.1007/s13300-023-01456-8
+Heald, A.H., Jenkins, D.A., Williams, R. et al. Sars-Cov-2 Infection in People with Type 1 Diabetes and Hospital Admission: An Analysis of Risk Factors for England. Diabetes Ther (2023). https://doi.org/10.1007/s13300-023-01456-8
+
+**Related replication study (CCU040_03)**
+
+*Replicating a COVID-19 study in a national England database to assess the generalisability of research with regional electronic health record data*
+
+Richard Williams, David Jenkins, Thomas Bolton, Adrian Heald, Mehrdad A Mizani, Matthew Sperrin, Niels Peek, on behalf of the CVD-COVID-UK/COVID-IMPACT Consortium
+
+Williams R, Jenkins D, Bolton T, et alReplicating a COVID-19 study in a national England database to assess the generalisability of research with regional electronic health record dataBMJ Open 2025;15:e093080. doi: https://doi.org/10.1136/bmjopen-2024-093080
 
 ## Contents
 
