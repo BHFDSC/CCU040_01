@@ -13,7 +13,15 @@ We also plan to extend the analysis to take advantage of any extra data that is 
 ## How to cite this work
 Heald, A.H., Jenkins, D.A., Williams, R. et al. Sars-Cov-2 Infection in People with Type 1 Diabetes and Hospital Admission: An Analysis of Risk Factors for England. Diabetes Ther (2023). https://doi.org/10.1007/s13300-023-01456-8
 
-**Related replication study (CCU040_03)**
+**Related study: CCU040_02**
+
+*The challenges of replication: a worked example of methods reproducibility using electronic health record data*
+
+Richard Williams, Thomas Bolton, David Jenkins, Mehrdad A. Mizani, Matthew Sperrin, Cathie Sudlow, Angela Wood, Adrian Heald, Niels Peek, on behalf of the CVD-COVID-UK/COVID-IMPACT Consortium
+
+Williams R, Bolton T, Jenkins D, Mizani MA, Sperrin M, Sudlow C, et al. (2025) The challenges of replication: A worked example of methods reproducibility using electronic health record data. PLoS One 20(7): e0326335. https://doi.org/10.1371/journal.pone.0326335
+
+**Related study: CCU040_03**
 
 *Replicating a COVID-19 study in a national England database to assess the generalisability of research with regional electronic health record data*
 
